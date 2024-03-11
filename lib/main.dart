@@ -15,24 +15,38 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text('앱임'),
           ),
-        body: Container(
-          child: Text('안녕')
-        ),
-        bottomNavigationBar: BottomAppBar(
-          child: SizedBox(
-            height: 70,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Icon(Icons.phone),
-                Icon(Icons.message),
-                Icon(Icons.contact_page)
-              ],
+        body: Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            width: double.infinity,
+            height: 100,
+            margin: EdgeInsets.all(20),
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              // shape: BoxShape.circle,
+              color: Colors.blue, // 여기서 컨테이너의 색을 설정합니다.
+              boxShadow:[
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.7),
+                  blurRadius: 5.0,
+                  spreadRadius: 0.0,
+                  offset: const Offset(0,7),
+                )
+              ] ,
+              border: Border.all(
+                color: Colors.red, // 테두리의 색
+                width: 2, // 테두리의 두께
+              ),
+              borderRadius: BorderRadius.all(
+                  Radius.circular(5.0) // POINT
+              ),
             ),
+            child: Text('안녕하세요'),
           ),
-        ),
         )
-          
+
+      )
+
     );
   }
 }
