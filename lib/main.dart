@@ -13,40 +13,47 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('앱임'),
+          backgroundColor: Colors.white,
+          actions:[
+            Icon(Icons.search, color: Colors.black,),SizedBox(width: 10),
+            Icon(Icons.menu, color: Colors.black),SizedBox(width: 10),
+            Icon(Icons.notifications_outlined, color: Colors.black), SizedBox(width: 10),],
+          title: Row(
+            children: [
+              Text('금호동 3가', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+              Icon(Icons.expand_more, color: Colors.black,)
+            ],
+          )
           ),
-        body: Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-            width: double.infinity,
-            height: 100,
-            margin: EdgeInsets.all(20),
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              // shape: BoxShape.circle,
-              color: Colors.blue, // 여기서 컨테이너의 색을 설정합니다.
-              boxShadow:[
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.7),
-                  blurRadius: 5.0,
-                  spreadRadius: 0.0,
-                  offset: const Offset(0,7),
-                )
-              ] ,
-              border: Border.all(
-                color: Colors.red, // 테두리의 색
-                width: 2, // 테두리의 두께
-              ),
-              borderRadius: BorderRadius.all(
-                  Radius.circular(5.0) // POINT
-              ),
-            ),
-            child: Text('안녕하세요'),
+        body: Container(
+          height: 150,
+          padding: EdgeInsets.all(5),
+          child: Row(
+            children:[
+              Flexible(flex:1, child: Image.asset('assets/dslr.jpg')),
+              Flexible(flex:2, child:Container(
+                padding: EdgeInsets.all(5),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('캐논 DESLR 100D (단렌즈, 충전기, 16기가 SD 포함',
+                      style:TextStyle(fontSize: 20)),
+                    Text('지역 이름 • 끌올 10분 전', style: TextStyle(color: Colors.black38, fontSize: 12),),
+                    Text('100000원', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Icon(Icons.favorite_border, color: Colors.black38, size: 20,),
+                        Text('4', style: TextStyle(color: Colors.black38),),
+                      ],
+                    )
+                  ],
+                ),
+              )),
+            ]
           ),
         )
-
       )
-
     );
   }
 }
