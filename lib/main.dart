@@ -17,19 +17,17 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
-          actions:[
-            Icon(Icons.search, color: Colors.black,),SizedBox(width: 10),
-            Icon(Icons.menu, color: Colors.black),SizedBox(width: 10),
-            Icon(Icons.notifications_outlined, color: Colors.black), SizedBox(width: 10),],
-          title: Row(
-            children: [
-              Text('금호동 3가', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
-              Icon(Icons.expand_more, color: Colors.black,)
-            ],
-          )
+          title: Text('위젯 공부')
           ),
-        body: a
+        body: ListView.builder(
+           itemCount: 3,
+           itemBuilder: (context,i){ //일반적으로 c,i로 작명
+             return ListTile(
+               leading: ,
+             ); //이 위젯이 3번 반복됨
+           }
+          ),
+          bottomNavigationBar: bottomappbar()
       )
     );
   }
@@ -46,6 +44,27 @@ class ShopItem extends StatelessWidget {
     );
   }
 }
+
+class bottomappbar extends StatelessWidget {
+  const bottomappbar({Key?key}):super(key:key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 50,
+      color: Colors.white24,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Icon(Icons.call),
+          Icon(Icons.call),
+          Icon(Icons.call),
+        ],
+      ),
+    );
+  }
+}
+
 
 
 // class HomePage extends StatelessWidget {
