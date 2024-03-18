@@ -2,20 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(MyApp());
 
-var a = SizedBox(
-  child: Text("변수로 커스텀 위젯 생성 "),
-);
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
+
+  var a = 1;
 
   @override
   Widget build(BuildContext context) {
 
     return MaterialApp(
       home: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          child: Text(a.toString()),
+          onPressed: (){ //버튼 눌렀을때 마다 실행
+            print(a);
+            a++;
+          },
+        ),
         appBar: AppBar(
           title: Text('위젯 공부')
           ),
@@ -23,7 +29,8 @@ class MyApp extends StatelessWidget {
            itemCount: 3,
            itemBuilder: (context,i){ //일반적으로 c,i로 작명
              return ListTile(
-               leading: ,
+               leading: Icon(Icons.account_circle),
+               title:Text('홍길동')
              ); //이 위젯이 3번 반복됨
            }
           ),
