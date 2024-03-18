@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(
+      MaterialApp(
+          home: MyApp()
+      )
+  );
+}
 
 class MyApp extends StatefulWidget {
   MyApp({Key? key}) : super(key: key);
@@ -18,16 +24,18 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         floatingActionButton: FloatingActionButton(
-          child: Text(a.toString()),
+          child: Text('다이얼로그'),
           onPressed: (){ //버튼 눌렀을때 마다 실행
-            print(a);
-            setState(() {
-              a++;
-            });
+            print(context.findAncestorWidgetOfExactType<MaterialApp>()); //조상중에 materialApp이 있으면 출력해주세요
+            showDialog(
+               context:context ,
+               barrierDismissible: true, //바깥 영역 터치시 닫을지 여부 결정
+               builder: (context){
+                 return DialogUI();
+               }
+           );
           },
         ),
         appBar: AppBar(
@@ -39,19 +47,52 @@ class _MyAppState extends State<MyApp> {
              return ListTile(
                leading: Text(like[i].toString()),
                title:Text(name[i]),
-               trailing:ElevatedButton(onPressed: (){
-                 setState(() {
-                   like[i]++;
-                 });
-               }, child: Text('좋아요')),
+               
              ); //이 위젯이 3번 반복됨
            }
           ),
           bottomNavigationBar: bottomappbar()
-      )
+      );
+  }
+}
+
+class DialogUI extends StatelessWidget {
+  const DialogUI({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title:Text('Contact'),
+      content: TextField(
+          onChanged: (value){
+          },
+          decoration:InputDecoration(hintText: '인풋값')
+      ),
+      actions: <Widget>[
+        Container(
+            child : Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  child: Text('Cancel'),
+                  onPressed: (){
+                    Navigator.pop(context); //창닫기
+                  },
+                ),
+                TextButton(
+                  child: Text('OK'),
+                  onPressed: (){
+                    Navigator.of(context).pop(); //창닫기-세밀한 제어가능
+                  },
+                ),
+              ],
+            )
+        )
+      ],
     );
   }
 }
+
 
 //나만의 위젯을 만드는 법
 class ShopItem extends StatelessWidget {
