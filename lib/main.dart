@@ -4,11 +4,17 @@ import 'package:rive/rive.dart';
 
 void main() => runApp(MyApp());
 
-
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   MyApp({Key? key}) : super(key: key);
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   var a = 1;
+  var name = ['김영숙', '홍길동', '피자집'];
+  var like = [0, 0 , 0];
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +25,9 @@ class MyApp extends StatelessWidget {
           child: Text(a.toString()),
           onPressed: (){ //버튼 눌렀을때 마다 실행
             print(a);
-            a++;
+            setState(() {
+              a++;
+            });
           },
         ),
         appBar: AppBar(
@@ -29,8 +37,13 @@ class MyApp extends StatelessWidget {
            itemCount: 3,
            itemBuilder: (context,i){ //일반적으로 c,i로 작명
              return ListTile(
-               leading: Icon(Icons.account_circle),
-               title:Text('홍길동')
+               leading: Text(like[i].toString()),
+               title:Text(name[i]),
+               trailing:ElevatedButton(onPressed: (){
+                 setState(() {
+                   like[i]++;
+                 });
+               }, child: Text('좋아요')),
              ); //이 위젯이 3번 반복됨
            }
           ),
