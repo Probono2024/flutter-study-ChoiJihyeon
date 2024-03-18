@@ -2,58 +2,85 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MyApp extends StatefulWidget {
+  MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  var a = 1;
+  var name = ['김영숙', '홍길동', '피자집'];
+  var like = [0, 0 , 0];
 
   @override
   Widget build(BuildContext context) {
 
     return MaterialApp(
       home: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          child: Text(a.toString()),
+          onPressed: (){ //버튼 눌렀을때 마다 실행
+            print(a);
+            setState(() {
+              a++;
+            });
+          },
+        ),
         appBar: AppBar(
-          backgroundColor: Colors.white,
-          actions:[
-            Icon(Icons.search, color: Colors.black,),SizedBox(width: 10),
-            Icon(Icons.menu, color: Colors.black),SizedBox(width: 10),
-            Icon(Icons.notifications_outlined, color: Colors.black), SizedBox(width: 10),],
-          title: Row(
-            children: [
-              Text('금호동 3가', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
-              Icon(Icons.expand_more, color: Colors.black,)
-            ],
-          )
+          title: Text('위젯 공부')
           ),
-        body: Container(
-          height: 150,
-          padding: EdgeInsets.all(5),
-          child: Row(
-            children:[
-              Flexible(flex:1, child: Image.asset('assets/dslr.jpg')),
-              Flexible(flex:2, child:Container(
-                padding: EdgeInsets.all(5),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('캐논 DESLR 100D (단렌즈, 충전기, 16기가 SD 포함',
-                      style:TextStyle(fontSize: 20)),
-                    Text('지역 이름 • 끌올 10분 전', style: TextStyle(color: Colors.black38, fontSize: 12),),
-                    Text('100000원', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Icon(Icons.favorite_border, color: Colors.black38, size: 20,),
-                        Text('4', style: TextStyle(color: Colors.black38),),
-                      ],
-                    )
-                  ],
-                ),
-              )),
-            ]
+        body: ListView.builder(
+           itemCount: 3,
+           itemBuilder: (context,i){ //일반적으로 c,i로 작명
+             return ListTile(
+               leading: Text(like[i].toString()),
+               title:Text(name[i]),
+               trailing:ElevatedButton(onPressed: (){
+                 setState(() {
+                   like[i]++;
+                 });
+               }, child: Text('좋아요')),
+             ); //이 위젯이 3번 반복됨
+           }
           ),
-        )
+          bottomNavigationBar: bottomappbar()
       )
+    );
+  }
+}
+
+//나만의 위젯을 만드는 법
+class ShopItem extends StatelessWidget {
+  const ShopItem({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      child: Text('안녕'),
+    );
+  }
+}
+
+class bottomappbar extends StatelessWidget {
+  const bottomappbar({Key?key}):super(key:key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 50,
+      color: Colors.white24,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Icon(Icons.call),
+          Icon(Icons.call),
+          Icon(Icons.call),
+        ],
+      ),
     );
   }
 }
