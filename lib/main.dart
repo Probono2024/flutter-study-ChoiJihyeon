@@ -25,39 +25,23 @@ class MyApp extends StatelessWidget {
             ],
           )
           ),
-        body: Container(
-          height: 150,
-          padding: EdgeInsets.all(5),
-          child: Row(
-            children:[
-              Flexible(flex:1, child: Image.asset('assets/dslr.jpg')),
-              Flexible(flex:2, child:Container(
-                padding: EdgeInsets.all(5),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('캐논 DESLR 100D (단렌즈, 충전기, 16기가 SD 포함',
-                      style:TextStyle(fontSize: 20)),
-                    Text('지역 이름 • 끌올 10분 전', style: TextStyle(color: Colors.black38, fontSize: 12),),
-                    Text('100000원', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Icon(Icons.favorite_border, color: Colors.black38, size: 20,),
-                        Text('4', style: TextStyle(color: Colors.black38),),
-                      ],
-                    )
-                  ],
-                ),
-              )),
-            ]
-          ),
-        )
+        body: ShopItem()
       )
     );
   }
 }
 
+//나만의 위젯을 만드는 법
+class ShopItem extends StatelessWidget {
+  const ShopItem({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      child: Text('안녕'),
+    );
+  }
+}
 
 
 // class HomePage extends StatelessWidget {
