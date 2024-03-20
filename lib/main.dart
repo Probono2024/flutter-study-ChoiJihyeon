@@ -18,12 +18,23 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  var a = 1;
+  var total = 3;
   var name = ['김영숙', '홍길동', '피자집'];
   var like = [0, 0 , 0];
 
+  addOne(text){
+    if (text.length>0){
+      setState(() {
+        name.add(text);
+        print(name);
+      });
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    name.sort();
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           child: Text('다이얼로그'),
@@ -33,20 +44,29 @@ class _MyAppState extends State<MyApp> {
                context:context ,
                barrierDismissible: true, //바깥 영역 터치시 닫을지 여부 결정
                builder: (context){
-                 return DialogUI();
+                 return DialogUI(addOne : addOne);
                }
            );
           },
         ),
         appBar: AppBar(
-          title: Text('위젯 공부')
+          title: Text(total.toString())
           ),
         body: ListView.builder(
-           itemCount: 3,
+           itemCount: name.length,
            itemBuilder: (context,i){ //일반적으로 c,i로 작명
              return ListTile(
-               leading: Text(like[i].toString()),
+               leading: Icon(Icons.account_circle),
                title:Text(name[i]),
+               trailing: ElevatedButton(
+                   child: Text("삭제"),
+                   onPressed:(){
+                     setState(() {
+                       name.removeAt(i);
+                       print(name);
+                       print(name.length);
+                     });
+                   }),
                
              ); //이 위젯이 3번 반복됨
            }
@@ -56,16 +76,23 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class DialogUI extends StatelessWidget {
-  const DialogUI({Key? key}) : super(key: key);
+class DialogUI extends StatefulWidget {
+  DialogUI({Key? key, this.addOne}) : super(key: key);
+  final addOne;
+
+  @override
+  State<DialogUI> createState() => _DialogUIState();
+}
+
+class _DialogUIState extends State<DialogUI> {
+  var inputData2 = '';
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title:Text('Contact'),
       content: TextField(
-          onChanged: (value){
-          },
+          onChanged: (text){inputData2=text;},
           decoration:InputDecoration(hintText: '인풋값')
       ),
       actions: <Widget>[
@@ -80,8 +107,9 @@ class DialogUI extends StatelessWidget {
                   },
                 ),
                 TextButton(
-                  child: Text('OK'),
+                  child: Text('완료'),
                   onPressed: (){
+                    widget.addOne(inputData2);
                     Navigator.of(context).pop(); //창닫기-세밀한 제어가능
                   },
                 ),
