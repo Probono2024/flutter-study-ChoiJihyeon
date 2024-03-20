@@ -19,13 +19,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   var total = 3;
-  var name = ['김영숙', '홍길동', '피자집'];
+  var name = {'김영숙':"010-1334-5996", '홍길동':"010-1554-5677", '피자집':"010-1234-5856"};
   var like = [0, 0 , 0];
 
-  addOne(text){
-    if (text.length>0){
+  addOne(key, value){
+    if (key.length>0){
       setState(() {
-        name.add(text);
+        name[key]=value;
         print(name);
       });
     }
@@ -34,7 +34,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    name.sort();
+    var sortedName = Map.fromEntries(name.entries.toList()..sort((e1,e2) => e1.key.compareTo(e2.key)));
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           child: Text('다이얼로그'),
@@ -53,18 +53,19 @@ class _MyAppState extends State<MyApp> {
           title: Text(total.toString())
           ),
         body: ListView.builder(
-           itemCount: name.length,
+           itemCount: sortedName.length,
            itemBuilder: (context,i){ //일반적으로 c,i로 작명
+             String key = sortedName.keys.elementAt(i);
              return ListTile(
                leading: Icon(Icons.account_circle),
-               title:Text(name[i]),
+               title:Text(key),
+               subtitle: Text(sortedName[key].toString()),
                trailing: ElevatedButton(
                    child: Text("삭제"),
                    onPressed:(){
                      setState(() {
-                       name.removeAt(i);
-                       print(name);
-                       print(name.length);
+                       sortedName.remove(key);
+                       name.remove(key);
                      });
                    }),
                
@@ -85,16 +86,26 @@ class DialogUI extends StatefulWidget {
 }
 
 class _DialogUIState extends State<DialogUI> {
+  var inputData1 = '';
   var inputData2 = '';
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title:Text('Contact'),
-      content: TextField(
-          onChanged: (text){inputData2=text;},
-          decoration:InputDecoration(hintText: '인풋값')
-      ),
+      content:Column(
+    mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: CrossAxisAlignment.start, 
+          children: <Widget>[
+            TextField(
+                onChanged: (text){inputData1=text;},
+                decoration:InputDecoration(hintText: '이름')
+            ),
+            TextField(
+                onChanged: (text){inputData2=text;},
+                decoration:InputDecoration(hintText: '전화번호')
+            ),
+          ]),
       actions: <Widget>[
         Container(
             child : Row(
@@ -109,7 +120,7 @@ class _DialogUIState extends State<DialogUI> {
                 TextButton(
                   child: Text('완료'),
                   onPressed: (){
-                    widget.addOne(inputData2);
+                    widget.addOne(inputData1, inputData2);
                     Navigator.of(context).pop(); //창닫기-세밀한 제어가능
                   },
                 ),
