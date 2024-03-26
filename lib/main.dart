@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(
@@ -18,6 +19,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
+  getPermission() async {
+    var status = await Permission.contacts.status;
+    if (status.isGranted) {
+      print('허락됨');
+    } else if (status.isDenied) {
+      print('거절됨');
+      Permission.contacts.request(); // 허락해달라고 팝업 띄우는 코드
+      openAppSettings(); //앱 설정 화면 켜줌
+    }
+  }
+
   var total = 3;
   var name = {'김영숙':"010-1334-5996", '홍길동':"010-1554-5677", '피자집':"010-1234-5856"};
   var like = [0, 0 , 0];
@@ -50,7 +63,8 @@ class _MyAppState extends State<MyApp> {
           },
         ),
         appBar: AppBar(
-          title: Text(total.toString())
+          title: Text(total.toString()),
+          actions:[IconButton(onPressed: (){getPermission();}, icon: Icon(Icons.contacts))],
           ),
         body: ListView.builder(
            itemCount: sortedName.length,
@@ -94,18 +108,18 @@ class _DialogUIState extends State<DialogUI> {
     return AlertDialog(
       title:Text('Contact'),
       content:Column(
-    mainAxisSize: MainAxisSize.min,
-    crossAxisAlignment: CrossAxisAlignment.start, 
-          children: <Widget>[
-            TextField(
-                onChanged: (text){inputData1=text;},
-                decoration:InputDecoration(hintText: '이름')
-            ),
-            TextField(
-                onChanged: (text){inputData2=text;},
-                decoration:InputDecoration(hintText: '전화번호')
-            ),
-          ]),
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              TextField(
+                  onChanged: (text){inputData1=text;},
+                  decoration:InputDecoration(hintText: '이름')
+              ),
+              TextField(
+                  onChanged: (text){inputData2=text;},
+                  decoration:InputDecoration(hintText: '전화번호')
+              ),
+            ]),
       actions: <Widget>[
         Container(
             child : Row(
