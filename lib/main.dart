@@ -159,8 +159,8 @@ class _DialogUIState extends State<DialogUI> {
                 // widget.addOne(inputData1, inputData2); //화면에는 뜨는데 실제 연락처에는 추가X
                 //실제 연락처에 추가 하는 법
                 var newContact = Contact();
-                newContact.givenName = inputData1;
-                newContact.phones = [Item(label: 'mobile', value: inputData2)]; //새로운 연락처 만들기
+                newContact.givenName = inputData1 ?? '이름없음';
+                newContact.phones = [Item(label: 'mobile', value: inputData2?? '번호없음')] ; //새로운 연락처 만들기
                 ContactsService.addContact(newContact);  //실제로 연락처에 집어넣기
                 print(newContact.givenName);
                 Navigator.of(context).pop(); //창닫기-세밀한 제어가능
