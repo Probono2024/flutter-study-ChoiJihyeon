@@ -25,9 +25,7 @@ class _MyAppState extends State<MyApp> {
       print(contacts[0].phones![0].value.toString()); // 번호 담겨있음
 
       for (int i=0; i<contacts.length; i++){
-        setState(() {
-          name[contacts[i].displayName.toString()]=contacts[0].phones![0].value.toString();
-        });
+        addName(contacts[i].displayName.toString(), contacts[0].phones![0].value.toString());
       }
 
       var newPerson = new Contact(); //폰에 연락처 강제 추가(new 키워드 생략 가능)
@@ -45,6 +43,12 @@ class _MyAppState extends State<MyApp> {
   var total = 3;
   Map<String, String> name= {};
   var like = [0, 0, 0];
+
+  addName(a, b){
+    setState(() {
+      name[a]=b;
+    });
+  }
 
   addOne(key, value) {
     if (key.length > 0) {
@@ -144,7 +148,7 @@ class _DialogUIState extends State<DialogUI> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             TextButton(
-              child: Text('Cancel'),
+              child: Text('취소'),
               onPressed: () {
                 Navigator.pop(context); //창닫기
               },
@@ -152,7 +156,13 @@ class _DialogUIState extends State<DialogUI> {
             TextButton(
               child: Text('완료'),
               onPressed: () {
-                widget.addOne(inputData1, inputData2);
+                // widget.addOne(inputData1, inputData2); //화면에는 뜨는데 실제 연락처에는 추가X
+                //실제 연락처에 추가 하는 법
+                var newContact = Contact();
+                newContact.givenName = inputData1;
+                newContact.phones = [Item(label: 'mobile', value: inputData2)]; //새로운 연락처 만들기
+                ContactsService.addContact(newContact);  //실제로 연락처에 집어넣기
+                print(newContact.givenName);
                 Navigator.of(context).pop(); //창닫기-세밀한 제어가능
               },
             ),
