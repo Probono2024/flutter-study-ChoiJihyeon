@@ -30,6 +30,7 @@ dependencies:
   flutter:
     sdk: flutter
   permission_handler: ^8.3.0
+  contacts_service: ^0.6.3
 
   rive: ^0.8.4
 

@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:contacts_service/contacts_service.dart';
 
 void main() {
-  runApp(
-      MaterialApp(
-          home: MyApp()
-      )
-  );
+  runApp(MaterialApp(home: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -19,11 +16,25 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   getPermission() async {
     var status = await Permission.contacts.status;
     if (status.isGranted) {
       print('허락됨');
+      var contacts = await ContactsService.getContacts(withThumbnails: false); //오래 걸리는 코드
+      print(contacts[0].displayName); // 이름 담겨있음
+      print(contacts[0].phones![0].value.toString()); // 번호 담겨있음
+
+      for (int i=0; i<contacts.length; i++){
+        setState(() {
+          name[contacts[i].displayName.toString()]=contacts[0].phones![0].value.toString();
+        });
+      }
+
+      var newPerson = new Contact(); //폰에 연락처 강제 추가(new 키워드 생략 가능)
+      newPerson.givenName='송송';
+      newPerson.familyName='최';
+      ContactsService.addContact(newPerson);
+
     } else if (status.isDenied) {
       print('거절됨');
       Permission.contacts.request(); // 허락해달라고 팝업 띄우는 코드
@@ -32,62 +43,67 @@ class _MyAppState extends State<MyApp> {
   }
 
   var total = 3;
-  var name = {'김영숙':"010-1334-5996", '홍길동':"010-1554-5677", '피자집':"010-1234-5856"};
-  var like = [0, 0 , 0];
+  Map<String, String> name= {};
+  var like = [0, 0, 0];
 
-  addOne(key, value){
-    if (key.length>0){
+  addOne(key, value) {
+    if (key.length > 0) {
       setState(() {
-        name[key]=value;
+        name[key] = value;
         print(name);
       });
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    var sortedName = Map.fromEntries(name.entries.toList()..sort((e1,e2) => e1.key.compareTo(e2.key)));
+    var sortedName = Map.fromEntries(
+        name.entries.toList()..sort((e1, e2) => e1.key.compareTo(e2.key)));
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           child: Text('다이얼로그'),
-          onPressed: (){ //버튼 눌렀을때 마다 실행
-            print(context.findAncestorWidgetOfExactType<MaterialApp>()); //조상중에 materialApp이 있으면 출력해주세요
+          onPressed: () {
+            //버튼 눌렀을때 마다 실행
+            print(context.findAncestorWidgetOfExactType<
+                MaterialApp>()); //조상중에 materialApp이 있으면 출력해주세요
             showDialog(
-               context:context ,
-               barrierDismissible: true, //바깥 영역 터치시 닫을지 여부 결정
-               builder: (context){
-                 return DialogUI(addOne : addOne);
-               }
-           );
+                context: context,
+                barrierDismissible: true, //바깥 영역 터치시 닫을지 여부 결정
+                builder: (context) {
+                  return DialogUI(addOne: addOne);
+                });
           },
         ),
         appBar: AppBar(
           title: Text(total.toString()),
-          actions:[IconButton(onPressed: (){getPermission();}, icon: Icon(Icons.contacts))],
-          ),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  getPermission();
+                },
+                icon: Icon(Icons.contacts))
+          ],
+        ),
         body: ListView.builder(
-           itemCount: sortedName.length,
-           itemBuilder: (context,i){ //일반적으로 c,i로 작명
-             String key = sortedName.keys.elementAt(i);
-             return ListTile(
-               leading: Icon(Icons.account_circle),
-               title:Text(key),
-               subtitle: Text(sortedName[key].toString()),
-               trailing: ElevatedButton(
-                   child: Text("삭제"),
-                   onPressed:(){
-                     setState(() {
-                       sortedName.remove(key);
-                       name.remove(key);
-                     });
-                   }),
-               
-             ); //이 위젯이 3번 반복됨
-           }
-          ),
-          bottomNavigationBar: bottomappbar()
-      );
+            itemCount: sortedName.length,
+            itemBuilder: (context, i) {
+              //일반적으로 c,i로 작명
+              String key = sortedName.keys.elementAt(i);
+              return ListTile(
+                leading: Icon(Icons.account_circle),
+                title: Text(key),
+                subtitle: Text(sortedName[key].toString()),
+                trailing: ElevatedButton(
+                    child: Text("삭제"),
+                    onPressed: () {
+                      setState(() {
+                        sortedName.remove(key);
+                        name.remove(key);
+                      });
+                    }),
+              ); //이 위젯이 3번 반복됨
+            }),
+        bottomNavigationBar: bottomappbar());
   }
 }
 
@@ -106,46 +122,46 @@ class _DialogUIState extends State<DialogUI> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title:Text('Contact'),
-      content:Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              TextField(
-                  onChanged: (text){inputData1=text;},
-                  decoration:InputDecoration(hintText: '이름')
-              ),
-              TextField(
-                  onChanged: (text){inputData2=text;},
-                  decoration:InputDecoration(hintText: '전화번호')
-              ),
-            ]),
+      title: Text('Contact'),
+      content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            TextField(
+                onChanged: (text) {
+                  inputData1 = text;
+                },
+                decoration: InputDecoration(hintText: '이름')),
+            TextField(
+                onChanged: (text) {
+                  inputData2 = text;
+                },
+                decoration: InputDecoration(hintText: '전화번호')),
+          ]),
       actions: <Widget>[
         Container(
-            child : Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  child: Text('Cancel'),
-                  onPressed: (){
-                    Navigator.pop(context); //창닫기
-                  },
-                ),
-                TextButton(
-                  child: Text('완료'),
-                  onPressed: (){
-                    widget.addOne(inputData1, inputData2);
-                    Navigator.of(context).pop(); //창닫기-세밀한 제어가능
-                  },
-                ),
-              ],
-            )
-        )
+            child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(context); //창닫기
+              },
+            ),
+            TextButton(
+              child: Text('완료'),
+              onPressed: () {
+                widget.addOne(inputData1, inputData2);
+                Navigator.of(context).pop(); //창닫기-세밀한 제어가능
+              },
+            ),
+          ],
+        ))
       ],
     );
   }
 }
-
 
 //나만의 위젯을 만드는 법
 class ShopItem extends StatelessWidget {
@@ -160,7 +176,7 @@ class ShopItem extends StatelessWidget {
 }
 
 class bottomappbar extends StatelessWidget {
-  const bottomappbar({Key?key}):super(key:key);
+  const bottomappbar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -178,8 +194,6 @@ class bottomappbar extends StatelessWidget {
     );
   }
 }
-
-
 
 // class HomePage extends StatelessWidget {
 //   const HomePage({Key? key}) : super(key: key);
